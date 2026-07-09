@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+
+  /* Paleta "river": verde-água amazônico, cor da marca */
+  --color-river-50: #effaf6;
+  --color-river-100: #d8f3e7;
+  --color-river-200: #b4e6d3;
+  --color-river-300: #83d2b9;
+  --color-river-400: #4fb89b;
+  --color-river-500: #2c9d81;
+  --color-river-600: #1e7e68;
+  --color-river-700: #186555;
+  --color-river-800: #165145;
+  --color-river-900: #13433a;
+  --color-river-950: #092621;
+
+  /* Acento "sunset": dourado do pôr do sol no rio */
+  --color-sunset-300: #fcd34d;
+  --color-sunset-400: #fbbf24;
+  --color-sunset-500: #f59e0b;
+  --color-sunset-600: #d97706;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-river-50);
+  color: #1b2a27;
+}
+
+/* Barra de rolagem discreta combinando com o tema */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-river-50);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-river-300);
+  border-radius: 8px;
+}

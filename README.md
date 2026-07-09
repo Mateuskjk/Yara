@@ -1,217 +1,134 @@
 <div align="center">
 
-# 🛶 Projeto Yara
+# 🛶 Yara
 
-**Plataforma web de venda de passagens fluviais para a Região Norte do Brasil**
+**Plataforma de venda de passagens fluviais para a Região Norte do Brasil**
 
-*Trabalho de Conclusão de Curso — Análise e Desenvolvimento de Sistemas (Fametro)*
+![Next.js](https://img.shields.io/badge/Next.js_16-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![React](https://img.shields.io/badge/React_19-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_v4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma_7-2D3748?style=for-the-badge&logo=prisma&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
 
-**Integrantes:** Mateus Silva e Tarcisio Sousa
-
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
-![Express](https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white)
-![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
-![Jasmine](https://img.shields.io/badge/Jasmine-8A4182?style=for-the-badge&logo=jasmine&logoColor=white)
+*Nascido como TCC de Análise e Desenvolvimento de Sistemas (Fametro), por
+**Mateus Silva** e **Tarcisio Sousa** — reconstruído do zero com stack moderna.*
 
 </div>
 
 ---
 
-## 📖 Sobre o Projeto
+## 📖 Sobre
 
-A **Yara** é uma resposta às lacunas existentes na venda de passagens fluviais na Região Norte do Brasil, onde o transporte por barco é essencial para milhões de pessoas, mas o processo de compra de passagens ainda é majoritariamente manual e presencial.
+Na Amazônia, **os rios são as estradas**: milhões de pessoas dependem de barcos
+para viajar entre as cidades, mas a compra de passagens ainda é presencial e
+manual. A Yara digitaliza essa jornada de ponta a ponta — busca de rotas,
+escolha de embarcação, cadastro de passageiros, pagamento (simulado) e
+**passagem digital** enviada por e-mail.
 
-A plataforma digitaliza toda a jornada de compra — busca de destinos, seleção de embarcação e horário, cadastro de passageiros, pagamento e emissão da passagem digital — com três objetivos centrais:
+> 🏷️ Yara (Iara) é a "mãe das águas" no folclore amazônico.
 
-1. **Acessibilidade** — aproximar as viagens fluviais das classes menos privilegiadas, com preços justos e um processo de compra simples;
-2. **Segurança e modernidade** — substituir bilhetes de papel por passagens digitais enviadas por e-mail;
-3. **Gestão** — apoiar a organização financeira das companhias de navegação da região.
+## ✨ Funcionalidades
 
-Além do aspecto comercial, o projeto enxerga o potencial transformador do setor: impulsionar o turismo regional e contribuir para o desenvolvimento econômico, social e ambiental das comunidades do interior da Amazônia.
+- 🔍 **Busca de viagens** por origem, destino, datas, classe e passageiros
+- 🛳️ **Comparação de embarcações** com horários e preços calculados por rota
+- 👤 **Contas de usuário** com senha criptografada (bcrypt) e sessão em cookie httpOnly (JWT)
+- 🔁 **Recuperação de senha** com token de uso único válido por 30 minutos
+- 🎫 **Passagem digital** com código de reserva, enviada por e-mail (Nodemailer)
+- 📋 **Minhas viagens** — histórico de reservas do usuário logado
+- 💳 Checkout com **cartão** (validação de bandeira) ou **PIX** — simulado, sem cobrança real
+- 📱 Design responsivo com tema visual amazônico
 
-> 🏷️ **Sobre o nome:** Yara (Iara) é a "mãe das águas" no folclore amazônico — uma referência direta aos rios que são as estradas da região.
+## 🏗️ Stack e Arquitetura
 
----
-
-## 🏗️ Arquitetura
-
-O sistema segue o modelo **cliente-servidor** em duas camadas independentes:
+| Camada | Tecnologia |
+|--------|-----------|
+| Framework | **Next.js 16** (App Router, Turbopack, Server Components) |
+| Linguagem | **TypeScript** |
+| Estilo | **Tailwind CSS v4** com design tokens próprios |
+| Banco | **PostgreSQL** ([Neon](https://neon.tech) em produção) via **Prisma 7** |
+| Auth | bcryptjs + JWT ([jose](https://github.com/panva/jose)) em cookie httpOnly |
+| E-mail | Nodemailer (SMTP) |
 
 ```
-Yara/
-├── Client/                     # Front-end (site estático)
-│   └── src/
-│       ├── html/               # Páginas da jornada de compra
-│       ├── css/                # Um arquivo de estilo por página
-│       ├── scripts/            # Lógica de cada página (JS puro, fetch API)
-│       └── images/             # Logos, banners e fotos dos destinos
-│
-└── Server/                     # Back-end (API REST)
-    ├── assets/
-    │   ├── app.js              # Bootstrap do Express (HTTP + HTTPS opcional)
-    │   ├── routes.js           # Definição de todas as rotas da API
-    │   ├── configDB.js         # Conexão com o SQLite
-    │   └── controllers/        # Controllers (um por entidade)
-    │       ├── Usuarios.js     # Cadastro, login (bcrypt) e recuperação de senha
-    │       ├── Destinos.js
-    │       ├── Companhias.js
-    │       ├── HoraViagem.js
-    │       ├── Sigla.js
-    │       ├── Passageiros.js
-    │       └── Email.js        # Envio da passagem digital (Nodemailer)
-    ├── spec/                   # Configuração de testes (Jasmine)
-    ├── .env.example            # Modelo das variáveis de ambiente
-    └── package.json
+app/
+├── page.tsx                  # Home: hero, busca e vitrine de destinos
+├── login/ · cadastro/        # Autenticação
+├── recuperar-senha/ · redefinir-senha/
+├── passagens/                # Etapa 1 — escolha da embarcação
+├── passageiros/              # Etapa 2 — dados dos passageiros
+├── pagamento/                # Etapa 3 — cartão ou PIX (simulado)
+├── confirmacao/[codigo]/     # Etapa 4 — passagem digital
+├── minhas-viagens/           # Histórico do usuário
+└── api/                      # Route Handlers (REST)
+    ├── auth/ (register, login, logout, me, forgot, reset)
+    ├── destinations/
+    └── bookings/ (+ [codigo])
+
+lib/        # prisma, auth (sessão JWT), pricing, email, constants
+prisma/     # schema + seed (destinos e companhias)
+components/ # Navbar, Footer, SearchForm, Steps, TicketDigital...
 ```
 
-- **Front-end:** HTML5, CSS3 e JavaScript puro (sem frameworks), consumindo a API via `fetch`.
-- **Back-end:** API REST em **Node.js + Express** (ES Modules), com persistência em **SQLite** — o arquivo do banco é criado automaticamente na primeira execução e **não é versionado**.
-- **Segurança:** senhas armazenadas com **hash bcrypt**, autenticação feita **no servidor** (rota `/login`), credenciais e segredos em **variáveis de ambiente** (`.env`), e a API nunca expõe o campo de senha.
-- **E-mail:** envio da passagem digital via **Nodemailer** (SMTP configurável pelo `.env`).
+## 🚀 Rodando localmente
 
----
-
-## 🧭 Jornada do Usuário
-
-| # | Página | Função |
-|---|--------|--------|
-| 1 | `index.html` | Busca de viagem (origem, destino, datas, passageiros) e vitrine de destinos |
-| 2 | `register.html` | Cadastro de novo usuário |
-| 3 | `login.html` | Autenticação (validada no servidor com bcrypt) |
-| 4 | `forget.html` / `forget-password.html` | Recuperação e redefinição de senha |
-| 5 | `index-with-icon.html` | Página inicial do usuário logado |
-| 6 | `ticket.html` | Escolha da passagem: companhia, horário e valor |
-| 7 | `infoPassenger.html` | Dados do(s) passageiro(s) |
-| 8 | `payment.html` | Pagamento por cartão de crédito ou PIX (simulado) |
-| 9 | `loading.html` | Processamento e envio da passagem por e-mail |
-| 10 | `congratulations.html` | Confirmação da compra |
-| 11 | `pass.html` | Passagem digital — basta apresentá-la com documento com foto no embarque |
-
----
-
-## 🔌 API REST
-
-Base: `http://localhost:3000`
-
-Todas as entidades seguem o mesmo padrão REST:
-
-| Método | Rota | Descrição |
-|--------|------|-----------|
-| GET | `/{entidade}` | Lista todos os registros |
-| GET | `/{entidade}/:id` | Busca um registro por ID |
-| POST | `/{entidade}` | Cria um registro |
-| PUT | `/{entidade}/:id` | Atualiza um registro |
-| DELETE | `/{entidade}/:id` | Remove um registro |
-
-Entidades disponíveis: **`/usuarios`** · **`/destinos`** · **`/passageiros`** · **`/horarios`** · **`/siglas`** · **`/companhias`**
-
-Rotas especiais:
-
-| Método | Rota | Descrição |
-|--------|------|-----------|
-| POST | `/login` | Autentica com `{ email, senha }` e retorna os dados públicos do usuário |
-| GET | `/usuarios?email=` | Busca usuário por e-mail (sem expor a senha) |
-| GET | `/passageiros/ultimo` | Último passageiro cadastrado (emissão da passagem) |
-| POST | `/passagens/email` | Envia a passagem digital por e-mail: `{ para, nome }` |
-
----
-
-## 🗄️ Banco de Dados (SQLite)
-
-As tabelas são criadas automaticamente na inicialização do servidor:
-
-| Tabela | Colunas |
-|--------|---------|
-| `Usuarios` | id, nome, sobrenome, email *(único)*, senha *(hash bcrypt)* |
-| `Destinos` | id, destino |
-| `InformationPassenger` | id, nome, sobrenome, cpf, rg, idade, email |
-| `HoraViagens` | id, Time |
-| `Sigla` | id, local, sigla |
-| `Companhias` | id, empresa |
-
-> 🔒 O arquivo do banco (`*.db`) está no `.gitignore` e nunca deve ser commitado, pois contém dados pessoais de usuários e passageiros.
-
----
-
-## 🚀 Como Executar
-
-### Pré-requisitos
-- [Node.js](https://nodejs.org/) 18 ou superior
+Pré-requisito: [Node.js](https://nodejs.org) 20.9+
 
 ```bash
 git clone https://github.com/Mateuskjk/Yara.git
-cd Yara/Server
+cd Yara
 npm install
 
-# Configure as variáveis de ambiente
-cp .env.example .env
-# edite o .env com suas credenciais de e-mail (opcional — necessário só para envio de e-mail)
+# 1. Configure o ambiente
+cp .env.example .env        # e preencha (veja abaixo)
 
-npm run dev      # desenvolvimento (nodemon) — ou: npm start
+# 2. Banco de dados local (PostgreSQL embutido do Prisma — sem instalar nada)
+npm run db:local            # deixe rodando em um terminal
+# copie a DATABASE_URL exibida para o .env, depois em outro terminal:
+npm run db:push             # cria as tabelas
+npm run db:seed             # popula destinos e companhias
+
+# 3. Suba a aplicação
+npm run dev                 # http://localhost:3000
 ```
 
-Pronto: o Express serve **o site e a API juntos** em `http://localhost:3000` (a raiz redireciona para a página inicial). O banco e as tabelas são criados automaticamente.
+### Variáveis de ambiente (`.env`)
 
-### Testes
-```bash
-cd Server
-npm test         # jasmine-browser-runner runSpecs
-```
+| Variável | Obrigatória | Descrição |
+|----------|-------------|-----------|
+| `DATABASE_URL` | ✅ | Connection string do PostgreSQL |
+| `AUTH_SECRET` | ✅ em produção | Segredo dos tokens de sessão (`openssl rand -base64 32`) |
+| `APP_URL` | — | URL pública (usada nos links de e-mail) |
+| `EMAIL_USER` / `EMAIL_PASS` | — | Credenciais SMTP ([senha de app do Gmail](https://myaccount.google.com/apppasswords)); sem elas o envio de e-mail é ignorado |
 
----
+## ☁️ Deploy (Vercel + Neon)
 
-## ☁️ Deploy no Render
+1. **Banco:** crie um projeto gratuito no [Neon](https://neon.tech) e copie a connection string;
+2. **App:** importe o repositório na [Vercel](https://vercel.com/new) e configure as variáveis `DATABASE_URL`, `AUTH_SECRET`, `APP_URL` (e as de e-mail, se quiser);
+3. Rode `npm run db:push && npm run db:seed` uma vez apontando para o Neon (localmente, com a `DATABASE_URL` do Neon no `.env`);
+4. Pronto — cada `git push` faz deploy automático.
 
-O repositório inclui um [`render.yaml`](render.yaml) (Blueprint) com tudo configurado:
-
-1. Crie uma conta gratuita em [render.com](https://render.com) usando sua conta do GitHub;
-2. No painel: **New + → Blueprint** → selecione o repositório `Yara`;
-3. Preencha as variáveis `EMAIL_USER` e `EMAIL_PASS` quando solicitado (necessárias só para o envio de e-mail — pode deixar em branco e configurar depois em *Environment*);
-4. Clique em **Apply**. Em ~2 minutos o site inteiro (front + API) estará no ar em `https://yara-XXXX.onrender.com`, com HTTPS e deploy automático a cada `git push`.
-
-> ⚠️ **Limitações do plano free:** o serviço hiberna após 15 min sem acesso (a primeira visita seguinte demora ~50 s para acordar) e o disco é efêmero — o banco SQLite é recriado a cada deploy/reinício, então os dados não persistem. Para dados permanentes, o próximo passo natural é migrar para PostgreSQL gerenciado (ex.: [Neon](https://neon.tech), gratuito).
-
----
+> Também funciona no **Render** (runtime Node): build `npm install && npm run build`, start `npm start`, com as mesmas variáveis de ambiente.
 
 ## 🔐 Segurança
 
-Medidas aplicadas neste projeto:
+- Senhas com **hash bcrypt** — nunca em texto puro
+- Sessão em **cookie httpOnly** assinado (JWT), inacessível a JavaScript do cliente
+- API **nunca expõe** hash de senha; redefinição exige token assinado com expiração
+- Segredos só em **variáveis de ambiente** (`.env` fora do Git)
+- Resposta idêntica no "esqueci minha senha" exista ou não o e-mail (evita enumeração de contas)
 
-- **Hash de senhas** com bcrypt — nenhuma senha é armazenada em texto puro;
-- **Login no servidor** — a comparação de credenciais acontece na rota `/login`, nunca no navegador;
-- **API sem vazamento de dados sensíveis** — o campo `senha` jamais é retornado nas respostas;
-- **Segredos fora do código** — credenciais SMTP e configurações ficam no `.env` (não versionado); use o `.env.example` como modelo;
-- **Banco e chaves fora do repositório** — `*.db`, `.env` e certificados SSL estão no `.gitignore`.
+## 📜 Histórico
 
-### Trabalhos futuros
-- Sessões/JWT para proteger as rotas da API;
-- Integração com gateway de pagamento real (o checkout atual é simulado);
-- Validações adicionais no servidor (formato de CPF, e-mail etc.);
-- Testes unitários e de integração cobrindo os controllers.
-
----
-
-## 🛠️ Tecnologias e Dependências
-
-| Camada | Tecnologia | Papel |
-|--------|-----------|-------|
-| Front-end | HTML5 / CSS3 / JavaScript (vanilla) | Interface e lógica das páginas |
-| Back-end | Node.js + Express 4 | Servidor e API REST |
-| Back-end | SQLite (`sqlite` + `sqlite3`) | Persistência de dados |
-| Back-end | bcryptjs | Hash de senhas |
-| Back-end | dotenv | Variáveis de ambiente |
-| Back-end | CORS | Liberação de acesso do front-end à API |
-| Back-end | Nodemailer | Envio da passagem digital por e-mail |
-| Dev | Nodemon | Hot-reload em desenvolvimento |
-| Testes | Jasmine + jasmine-browser-runner | Testes unitários |
+A primeira versão deste projeto (TCC, 2023) foi construída com HTML/CSS/JS puro +
+Express + SQLite e está preservada no
+[histórico do Git](https://github.com/Mateuskjk/Yara/commits/main). Esta versão
+é a reescrita completa em Next.js.
 
 ---
 
 <div align="center">
 
-Feito com 💙 por **Mateus Silva** e **Tarcisio Sousa** — Manaus/AM 🇧🇷
+Feito com 💙 em Manaus/AM 🇧🇷 — projeto acadêmico; compras são simuladas.
 
 </div>

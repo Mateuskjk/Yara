@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  nome      String
+  sobrenome String?
+  email     String    @unique
+  senhaHash String
+  createdAt DateTime  @default(now())
+  bookings  Booking[]
+}
+
+model Destination {
+  id        Int    @id @default(autoincrement())
+  nome      String @unique
+  sigla     String
+  // preço base em centavos, para evitar problemas de ponto flutuante
+  precoBase Int
+  imagem    String
+}
+
+model Company {
+  id   Int    @id @default(autoincrement())
+  nome String @unique
+}
+
+model Booking {
+  id          Int         @id @default(autoincrement())
+  codigo      String      @unique
+  user        User?       @relation(fields: [userId], references: [id])
+  userId      Int?
+  origem      String
+  destino     String
+  dataIda     DateTime
+  dataVolta   DateTime?
+  classe      String
+  companhia   String
+  horario     String
+  valorTotal  Int
+  createdAt   DateTime    @default(now())
+  passageiros Passenger[]
+}
+
+model Passenger {
+  id        Int     @id @default(autoincrement())
+  booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  bookingId Int
+  nome      String
+  sobrenome String?
+  cpf       String?
+  idade     Int?
+  email     String?
+}
