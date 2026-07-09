@@ -178,7 +178,7 @@ btn.addEventListener("click", function (e) {
 });
 
 // Realiza a solicitação para obter os destinos da URL
-fetch('http://localhost:3000/destinos')
+fetch('/destinos')
   .then(res => res.json())
   .then((json) => {
     console.log(json);
@@ -265,7 +265,7 @@ function filtro() {
 
 
 //INPUT DO DESTINO:
-fetch('http://localhost:3000/destinos')
+fetch('/destinos')
   .then(res => res.json())
   .then((json) => {
     console.log(json);

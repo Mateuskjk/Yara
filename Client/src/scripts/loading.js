@@ -4,7 +4,7 @@ const infoticket = JSON.parse(localStorage.getItem('infoticket')) || {};
 const passageiros = infoticket.passageiros || [];
 
 if (passageiros.length > 0 && passageiros[0].email) {
-  fetch('http://localhost:3000/passagens/email', {
+  fetch('/passagens/email', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({

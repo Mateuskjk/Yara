@@ -233,7 +233,7 @@ if (localStorage.getItem('pesquisaInfo')) {
     window.location.href = 'infoPassenger.html';
   }
   // URL do banco de dados
-  const url = 'http://localhost:3000/companhias';
+  const url = '/companhias';
   
   // Variáveis para armazenar os dados
   let company_name = "";

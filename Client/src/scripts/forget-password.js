@@ -58,7 +58,7 @@ btnAvancarPass.addEventListener("click", async (e) => {
 
     if (userId !== null) {
       // O servidor aplica o hash (bcrypt) antes de salvar a nova senha
-      const response = await fetch(`http://localhost:3000/usuarios/${userId}`, {
+      const response = await fetch(`/usuarios/${userId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -81,7 +81,7 @@ btnAvancarPass.addEventListener("click", async (e) => {
 });
 
 async function getUserIdByEmail(email) {
-  const response = await fetch(`http://localhost:3000/usuarios?email=${encodeURIComponent(email)}`, {
+  const response = await fetch(`/usuarios?email=${encodeURIComponent(email)}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

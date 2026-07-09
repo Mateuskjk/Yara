@@ -55,7 +55,7 @@ const sendToDBButton = document.querySelector('#send');
 
 sendToDBButton.addEventListener('click', () => {
 // Supondo que 'passageiros' seja o array que você deseja enviar para o servidor
-fetch('http://localhost:3000/passageiros', {
+fetch('/passageiros', {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json',

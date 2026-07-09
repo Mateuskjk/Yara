@@ -9,7 +9,8 @@ import { enviarPassagemEmail } from './controllers/Email.js';
 
 const router = Router();
 
-router.get('/', (req, res) => {
+// Health check (usado pelo Render para saber se o serviço está no ar)
+router.get('/api/status', (req, res) => {
   res.json({ statusCode: 200, msg: 'API rodando' });
 });
 

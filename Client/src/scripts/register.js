@@ -22,7 +22,7 @@ btnAccount.addEventListener('click', function (e) {
     return;
   }
 
-  fetch('http://localhost:3000/usuarios', {
+  fetch('/usuarios', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

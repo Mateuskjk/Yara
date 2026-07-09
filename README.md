@@ -141,7 +141,6 @@ As tabelas são criadas automaticamente na inicialização do servidor:
 ### Pré-requisitos
 - [Node.js](https://nodejs.org/) 18 ou superior
 
-### 1. Back-end (API)
 ```bash
 git clone https://github.com/Mateuskjk/Yara.git
 cd Yara/Server
@@ -153,16 +152,27 @@ cp .env.example .env
 
 npm run dev      # desenvolvimento (nodemon) — ou: npm start
 ```
-A API sobe em `http://localhost:3000`. O banco e as tabelas são criados automaticamente.
 
-### 2. Front-end
-Abra `Client/src/html/index.html` no navegador — o mais prático é usar a extensão **Live Server** do VS Code (`http://127.0.0.1:5500`).
+Pronto: o Express serve **o site e a API juntos** em `http://localhost:3000` (a raiz redireciona para a página inicial). O banco e as tabelas são criados automaticamente.
 
 ### Testes
 ```bash
 cd Server
 npm test         # jasmine-browser-runner runSpecs
 ```
+
+---
+
+## ☁️ Deploy no Render
+
+O repositório inclui um [`render.yaml`](render.yaml) (Blueprint) com tudo configurado:
+
+1. Crie uma conta gratuita em [render.com](https://render.com) usando sua conta do GitHub;
+2. No painel: **New + → Blueprint** → selecione o repositório `Yara`;
+3. Preencha as variáveis `EMAIL_USER` e `EMAIL_PASS` quando solicitado (necessárias só para o envio de e-mail — pode deixar em branco e configurar depois em *Environment*);
+4. Clique em **Apply**. Em ~2 minutos o site inteiro (front + API) estará no ar em `https://yara-XXXX.onrender.com`, com HTTPS e deploy automático a cada `git push`.
+
+> ⚠️ **Limitações do plano free:** o serviço hiberna após 15 min sem acesso (a primeira visita seguinte demora ~50 s para acordar) e o disco é efêmero — o banco SQLite é recriado a cada deploy/reinício, então os dados não persistem. Para dados permanentes, o próximo passo natural é migrar para PostgreSQL gerenciado (ex.: [Neon](https://neon.tech), gratuito).
 
 ---
 

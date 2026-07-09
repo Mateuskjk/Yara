@@ -8,7 +8,7 @@ btnLogin.addEventListener("click", function(e){
   const email = document.querySelector("#tagName").value;
   const senha = document.querySelector("#pass").value;
 
-  fetch('http://localhost:3000/login', {
+  fetch('/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, senha })

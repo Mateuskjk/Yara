@@ -6,7 +6,7 @@ btnAvançar.addEventListener("click", (e) => {
   const email = document.querySelector("#email").value;
 
   // Busca apenas pelo e-mail informado — a API não expõe senhas
-  fetch(`http://localhost:3000/usuarios?email=${encodeURIComponent(email)}`)
+  fetch(`/usuarios?email=${encodeURIComponent(email)}`)
     .then((res) => res.json())
     .then((usuarios) => {
       if (usuarios.length > 0) {
