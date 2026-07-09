@@ -12,6 +12,8 @@ model User {
   nome      String
   sobrenome String?
   email     String    @unique
+  // CPF normalizado (somente dígitos) — usado para vincular compras feitas sem login
+  cpf       String?   @unique
   senhaHash String
   createdAt DateTime  @default(now())
   bookings  Booking[]

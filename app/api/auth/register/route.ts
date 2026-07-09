@@ -2,10 +2,11 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { createSession } from "@/lib/auth";
+import { normalizarCpf, vincularReservasPorCpf } from "@/lib/cpf";
 
 export async function POST(request: Request) {
   try {
-    const { nome, sobrenome, email, senha } = await request.json();
+    const { nome, sobrenome, email, senha, cpf } = await request.json();
 
     if (!nome || !email || !senha) {
       return NextResponse.json(
@@ -26,10 +27,24 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "E-mail já cadastrado" }, { status: 409 });
     }
 
+    const cpfNormalizado = normalizarCpf(cpf);
+    if (cpf && !cpfNormalizado) {
+      return NextResponse.json({ error: "CPF inválido — confira os 11 dígitos" }, { status: 400 });
+    }
+    if (cpfNormalizado) {
+      const cpfEmUso = await prisma.user.findUnique({ where: { cpf: cpfNormalizado } });
+      if (cpfEmUso) {
+        return NextResponse.json({ error: "CPF já cadastrado em outra conta" }, { status: 409 });
+      }
+    }
+
     const senhaHash = await bcrypt.hash(senha, 10);
     const user = await prisma.user.create({
-      data: { nome, sobrenome, email, senhaHash },
+      data: { nome, sobrenome, email, cpf: cpfNormalizado, senhaHash },
     });
+
+    // Vincula compras feitas sem login que tenham passageiro com este CPF
+    await vincularReservasPorCpf(user.id, cpfNormalizado);
 
     // Já entra logado após o cadastro
     await createSession({ id: user.id, nome: user.nome, email: user.email });

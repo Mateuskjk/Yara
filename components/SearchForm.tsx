@@ -48,18 +48,33 @@ export default function SearchForm() {
     router.push(`/passagens?${params.toString()}`);
   }
 
-  const selectClass =
-    "w-full rounded-xl border border-river-200 bg-white px-3 py-2.5 text-sm text-river-950 outline-none transition focus:border-river-500 focus:ring-2 focus:ring-river-200";
+  const campo =
+    "w-full min-w-0 rounded-xl border border-river-200 bg-white px-3 py-2.5 text-sm text-river-950 outline-none transition focus:border-river-500 focus:ring-2 focus:ring-river-200";
+
+  const pill = (ativa: boolean) =>
+    `rounded-full px-4 py-1.5 text-sm font-semibold transition cursor-pointer ${
+      ativa ? "bg-river-600 text-white shadow" : "bg-river-50 text-river-700 hover:bg-river-100"
+    }`;
 
   return (
     <form
       onSubmit={buscar}
-      className="w-full rounded-3xl bg-white/95 p-5 shadow-2xl backdrop-blur md:p-6"
+      className="w-full max-w-full rounded-3xl bg-white/95 p-4 text-left shadow-2xl backdrop-blur sm:p-6"
     >
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <label className="block">
+      {/* Tipo de viagem */}
+      <div className="flex gap-2">
+        <button type="button" onClick={() => setIdaEVolta(true)} className={pill(idaEVolta)}>
+          Ida e volta
+        </button>
+        <button type="button" onClick={() => setIdaEVolta(false)} className={pill(!idaEVolta)}>
+          Somente ida
+        </button>
+      </div>
+
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+        <label className="block min-w-0">
           <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-river-700">Origem</span>
-          <select value={origem} onChange={(e) => setOrigem(e.target.value)} className={selectClass}>
+          <select value={origem} onChange={(e) => setOrigem(e.target.value)} className={campo}>
             <option value="">De onde você sai?</option>
             {destinos.map((d) => (
               <option key={d.nome} value={d.nome}>{d.nome} ({d.sigla})</option>
@@ -67,17 +82,19 @@ export default function SearchForm() {
           </select>
         </label>
 
-        <label className="block">
+        <label className="block min-w-0">
           <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-river-700">Destino</span>
-          <select value={destino} onChange={(e) => setDestino(e.target.value)} className={selectClass}>
+          <select value={destino} onChange={(e) => setDestino(e.target.value)} className={campo}>
             <option value="">Para onde você vai?</option>
             {destinos.map((d) => (
               <option key={d.nome} value={d.nome}>{d.nome} ({d.sigla})</option>
             ))}
           </select>
         </label>
+      </div>
 
-        <label className="block">
+      <div className="mt-3 grid grid-cols-2 gap-3">
+        <label className="block min-w-0">
           <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-river-700">Ida</span>
           <input
             type="date"
@@ -87,11 +104,11 @@ export default function SearchForm() {
               setDataIda(e.target.value);
               if (dataVolta && dataVolta < e.target.value) setDataVolta(e.target.value);
             }}
-            className={selectClass}
+            className={campo}
           />
         </label>
 
-        <label className="block">
+        <label className="block min-w-0">
           <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-river-700">Volta</span>
           <input
             type="date"
@@ -99,32 +116,22 @@ export default function SearchForm() {
             value={dataVolta}
             onChange={(e) => setDataVolta(e.target.value)}
             disabled={!idaEVolta}
-            className={`${selectClass} disabled:cursor-not-allowed disabled:bg-river-50 disabled:text-river-300`}
+            className={`${campo} disabled:cursor-not-allowed disabled:bg-river-50 disabled:text-river-300`}
           />
         </label>
       </div>
 
-      <div className="mt-4 flex flex-wrap items-end gap-4">
-        <label className="flex items-center gap-2 text-sm font-medium text-river-800">
-          <input
-            type="checkbox"
-            checked={idaEVolta}
-            onChange={(e) => setIdaEVolta(e.target.checked)}
-            className="h-4 w-4 accent-river-600"
-          />
-          Ida e volta
-        </label>
-
-        <label className="block">
+      <div className="mt-3 grid grid-cols-2 gap-3">
+        <label className="block min-w-0">
           <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-river-700">Classe</span>
-          <select value={classe} onChange={(e) => setClasse(e.target.value)} className={selectClass}>
+          <select value={classe} onChange={(e) => setClasse(e.target.value)} className={campo}>
             {CLASSES.map((c) => (
               <option key={c} value={c}>{c}</option>
             ))}
           </select>
         </label>
 
-        <label className="block">
+        <label className="block min-w-0">
           <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-river-700">Passageiros</span>
           <input
             type="number"
@@ -132,21 +139,21 @@ export default function SearchForm() {
             max={10}
             value={passageiros}
             onChange={(e) => setPassageiros(Number(e.target.value))}
-            className={`${selectClass} w-24`}
+            className={campo}
           />
         </label>
-
-        <button
-          type="submit"
-          className="ml-auto rounded-xl bg-river-600 px-8 py-3 font-semibold text-white shadow-lg transition hover:bg-river-500 hover:shadow-xl active:scale-95 cursor-pointer"
-        >
-          Buscar passagens 🔍
-        </button>
       </div>
 
       {erro && (
         <p className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-sm font-medium text-red-600">{erro}</p>
       )}
+
+      <button
+        type="submit"
+        className="mt-4 w-full rounded-xl bg-river-600 px-8 py-3.5 font-semibold text-white shadow-lg transition hover:bg-river-500 hover:shadow-xl active:scale-[0.98] cursor-pointer sm:ml-auto sm:block sm:w-auto"
+      >
+        Buscar passagens 🔍
+      </button>
     </form>
   );
 }

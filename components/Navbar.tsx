@@ -36,12 +36,13 @@ export default function Navbar({ transparente = false }: { transparente?: boolea
     >
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
         <Link href="/" className="flex items-center gap-2">
+          {/* logo.png é branca (fundos escuros); logo-cor.png é verde-água (fundos claros) */}
           <Image
-            src="/brand/logo.png"
+            src={transparente ? "/brand/logo.png" : "/brand/logo-cor.png"}
             alt="Yara"
             width={110}
             height={40}
-            className={`h-9 w-auto ${transparente ? "brightness-0 invert" : ""}`}
+            className="h-9 w-auto"
             priority
           />
         </Link>

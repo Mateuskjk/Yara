@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { createSession } from "@/lib/auth";
+import { vincularReservasPorCpf } from "@/lib/cpf";
 
 export async function POST(request: Request) {
   try {
@@ -21,6 +22,9 @@ export async function POST(request: Request) {
         { status: 401 }
       );
     }
+
+    // Vincula compras feitas sem login que tenham passageiro com o CPF da conta
+    await vincularReservasPorCpf(user.id, user.cpf);
 
     await createSession({ id: user.id, nome: user.nome, email: user.email });
 

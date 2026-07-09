@@ -29,7 +29,7 @@ export default function AuthShell({
             alt="Yara"
             width={130}
             height={48}
-            className="h-11 w-auto brightness-0 invert"
+            className="h-11 w-auto"
           />
         </Link>
 

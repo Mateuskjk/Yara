@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 import { enviarEmailPassagem } from "@/lib/email";
+import { normalizarCpf } from "@/lib/cpf";
 
 type PassageiroInput = {
   nome?: string;
@@ -37,12 +38,18 @@ export async function POST(request: Request) {
       );
     }
 
+    // Confirma que o usuário da sessão ainda existe antes de vincular
     const session = await getSession();
+    let userId: number | null = null;
+    if (session) {
+      const usuario = await prisma.user.findUnique({ where: { id: session.id } });
+      userId = usuario?.id ?? null;
+    }
 
     const booking = await prisma.booking.create({
       data: {
         codigo: gerarCodigo(),
-        userId: session?.id ?? null,
+        userId,
         origem,
         destino,
         dataIda: new Date(dataIda),
@@ -55,7 +62,8 @@ export async function POST(request: Request) {
           create: listaPassageiros.map((p) => ({
             nome: String(p.nome),
             sobrenome: p.sobrenome ? String(p.sobrenome) : null,
-            cpf: p.cpf ? String(p.cpf) : null,
+            // CPF salvo normalizado (só dígitos) para permitir o vínculo com contas
+            cpf: normalizarCpf(p.cpf),
             idade: p.idade ? Number(p.idade) : null,
             email: p.email ? String(p.email) : null,
           })),

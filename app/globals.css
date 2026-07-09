@@ -29,6 +29,19 @@ body {
   color: #1b2a27;
 }
 
+/* iOS/Safari: inputs de data têm largura mínima intrínseca e estouram o layout;
+   appearance none faz o campo respeitar o width do container */
+input[type="date"],
+input[type="month"] {
+  -webkit-appearance: none;
+  appearance: none;
+  min-height: 2.65rem;
+}
+input[type="date"]::-webkit-date-and-time-value,
+input[type="month"]::-webkit-date-and-time-value {
+  text-align: left;
+}
+
 /* Barra de rolagem discreta combinando com o tema */
 ::-webkit-scrollbar {
   width: 10px;

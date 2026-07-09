@@ -11,6 +11,7 @@ export default function CadastroPage() {
   const [nome, setNome] = useState("");
   const [sobrenome, setSobrenome] = useState("");
   const [email, setEmail] = useState("");
+  const [cpf, setCpf] = useState("");
   const [senha, setSenha] = useState("");
   const [confSenha, setConfSenha] = useState("");
   const [erro, setErro] = useState("");
@@ -29,7 +30,7 @@ export default function CadastroPage() {
     const res = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nome, sobrenome, email, senha }),
+      body: JSON.stringify({ nome, sobrenome, email, cpf, senha }),
     });
     setCarregando(false);
 
@@ -66,6 +67,21 @@ export default function CadastroPage() {
             placeholder="voce@exemplo.com"
             className={inputClass}
           />
+        </label>
+
+        <label className="block">
+          <span className={labelClass}>CPF (opcional)</span>
+          <input
+            inputMode="numeric"
+            placeholder="000.000.000-00"
+            value={cpf}
+            onChange={(e) => setCpf(e.target.value)}
+            className={inputClass}
+          />
+          <span className="mt-1 block text-xs text-river-500">
+            Passagens compradas sem login com este CPF aparecem automaticamente em
+            &quot;Minhas viagens&quot;.
+          </span>
         </label>
 
         <div className="grid grid-cols-2 gap-3">
