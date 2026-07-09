@@ -26,7 +26,7 @@ export default async function PassagensPage({
     return (
       <>
         <Navbar />
-        <main className="mx-auto max-w-3xl px-4 py-24 text-center">
+        <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-24 text-center">
           <p className="text-5xl">🧭</p>
           <h1 className="mt-4 text-2xl font-bold text-river-950">Busca incompleta</h1>
           <p className="mt-2 text-river-700">

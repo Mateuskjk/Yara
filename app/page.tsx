@@ -71,7 +71,7 @@ export default async function Home() {
       </section>
 
       {/* Destinos */}
-      <section id="destinos" className="mx-auto max-w-6xl px-4 py-16">
+      <section id="destinos" className="mx-auto w-full max-w-6xl px-4 py-16">
         <div className="mb-8 flex items-end justify-between">
           <div>
             <h2 className="text-3xl font-bold text-river-950">Destinos populares</h2>
@@ -142,7 +142,7 @@ export default async function Home() {
       </section>
 
       {/* Chamada final */}
-      <section className="mx-auto max-w-6xl px-4 py-16">
+      <section className="mx-auto w-full max-w-6xl px-4 py-16">
         <div className="relative overflow-hidden rounded-3xl bg-river-900 px-8 py-12 text-center shadow-2xl md:px-16">
           <div className="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-river-700/50 blur-2xl" />
           <div className="absolute -bottom-12 -left-12 h-56 w-56 rounded-full bg-sunset-500/20 blur-2xl" />
