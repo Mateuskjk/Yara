@@ -1,61 +1,65 @@
-import { Router } from "express";
-import { selectDestinos, selectDestino, insertDestino, updateDestino, deleteDestino } from './controler/Destinos.js';
-import { selectUsuarios, selectUsuario, insertUsuario, updateUsuario, deleteUsuario } from './controler/Usuarios.js';
-import { selectInformationUser, selectInformationUserById, insertInformationPassenger, updateInformationPassenger, deleteInformationPassenger } from "./controler/informationPassenger.js";
-import { Companhias, Companhia, ptCompanhia, udtCompanhia, delCompanhia } from "./controler/Companhias.js";
-import { selectHoraViagens, selectHoraViagem, insertHoraViagem, updateHoraViagem, deleteHoraViagem } from './controler/HoraViagem.js';
-import { selectSiglas, selectSigla, insertSigla, updateSigla, deleteSigla } from "./controler/Sigla.js";
-import { getLastInsertedIdWithInfo } from "./controler/informationPassenger.js";
-
-// import { sendMail } from "./controler/passagem.js";
+import { Router } from 'express';
+import { selectUsuarios, selectUsuario, insertUsuario, updateSenhaUsuario, deleteUsuario, loginUsuario } from './controllers/Usuarios.js';
+import { selectDestinos, selectDestino, insertDestino, updateDestino, deleteDestino } from './controllers/Destinos.js';
+import { selectPassageiros, selectPassageiro, selectUltimoPassageiro, insertPassageiros, updatePassageiro, deletePassageiro } from './controllers/Passageiros.js';
+import { selectHoraViagens, selectHoraViagem, insertHoraViagem, updateHoraViagem, deleteHoraViagem } from './controllers/HoraViagem.js';
+import { selectSiglas, selectSigla, insertSigla, updateSigla, deleteSigla } from './controllers/Sigla.js';
+import { selectCompanhias, selectCompanhia, insertCompanhia, updateCompanhia, deleteCompanhia } from './controllers/Companhias.js';
+import { enviarPassagemEmail } from './controllers/Email.js';
 
 const router = Router();
 
-router.get('/', (req, res) =>{
-  res.json({
-    "statusCode":200,
-    "msg": "Api rodando"
-  })
-})
+router.get('/', (req, res) => {
+  res.json({ statusCode: 200, msg: 'API rodando' });
+});
 
-router.get('/destinos', selectDestinos);
-router.get('/destino', selectDestino);
-router.post('/destino', insertDestino);
-router.put('/destino', updateDestino);
-router.delete('/destino', deleteDestino);
+// Autenticação
+router.post('/login', loginUsuario);
 
+// Usuários
 router.get('/usuarios', selectUsuarios);
-router.get('/usuario/:id', selectUsuario);
-router.post('/usuario', insertUsuario);
-router.put('/usuario/:id', updateUsuario);
-router.delete('/usuario', deleteUsuario);
+router.get('/usuarios/:id', selectUsuario);
+router.post('/usuarios', insertUsuario);
+router.put('/usuarios/:id', updateSenhaUsuario);
+router.delete('/usuarios/:id', deleteUsuario);
 
-router.get('/getselectInformationUser', selectInformationUser);
-router.get('/getselectInformationUserById/:id', selectInformationUserById);
-router.post('/postInformationPassenger', insertInformationPassenger);
-router.put('/putInformationPassenger/:id', updateInformationPassenger);
-router.delete('/deleteInformationPassenger', deleteInformationPassenger);
+// Destinos
+router.get('/destinos', selectDestinos);
+router.get('/destinos/:id', selectDestino);
+router.post('/destinos', insertDestino);
+router.put('/destinos/:id', updateDestino);
+router.delete('/destinos/:id', deleteDestino);
 
-router.get('/getSelectHoraViagens', selectHoraViagens);
-router.get('/getSelectHoraViagem', selectHoraViagem);
-router.post('/InsertHoraViagem', insertHoraViagem);
-router.put('/putUpdateHoraViagem', updateHoraViagem);
-router.delete('/deleteDeleteHoraViagem', deleteHoraViagem);
+// Passageiros ("/ultimo" precisa vir antes de "/:id")
+router.get('/passageiros', selectPassageiros);
+router.get('/passageiros/ultimo', selectUltimoPassageiro);
+router.get('/passageiros/:id', selectPassageiro);
+router.post('/passageiros', insertPassageiros);
+router.put('/passageiros/:id', updatePassageiro);
+router.delete('/passageiros/:id', deletePassageiro);
 
-router.get('/getSelectSiglas', selectSiglas);
-router.get('/getSelectSigla', selectSigla);
-router.post('/postInsertSigla', insertSigla);
-router.put('/putUpdateSigla', updateSigla);
-router.delete('/deleteDeleteSigla', deleteSigla);
+// Horários de viagem
+router.get('/horarios', selectHoraViagens);
+router.get('/horarios/:id', selectHoraViagem);
+router.post('/horarios', insertHoraViagem);
+router.put('/horarios/:id', updateHoraViagem);
+router.delete('/horarios/:id', deleteHoraViagem);
 
-router.get('/lastInsertedId/:id', getLastInsertedIdWithInfo);
+// Siglas dos portos/localidades
+router.get('/siglas', selectSiglas);
+router.get('/siglas/:id', selectSigla);
+router.post('/siglas', insertSigla);
+router.put('/siglas/:id', updateSigla);
+router.delete('/siglas/:id', deleteSigla);
 
-router.get('/companhias', Companhias);
-router.get('/companhia', Companhia);
-router.post('/ptcompanhia', ptCompanhia);
-router.put('/uptcompanhia', udtCompanhia);
-router.delete('/delcompanhia', delCompanhia);
+// Companhias de navegação
+router.get('/companhias', selectCompanhias);
+router.get('/companhias/:id', selectCompanhia);
+router.post('/companhias', insertCompanhia);
+router.put('/companhias/:id', updateCompanhia);
+router.delete('/companhias/:id', deleteCompanhia);
 
-// router.run(sendMail)
+// Envio da passagem digital por e-mail
+router.post('/passagens/email', enviarPassagemEmail);
 
 export default router;

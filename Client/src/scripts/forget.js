@@ -3,20 +3,18 @@ const btnAvançar = document.querySelector("#enviar");
 btnAvançar.addEventListener("click", (e) => {
   e.preventDefault();
 
-  const inputEmailUser = document.querySelector("#email");
-  const emailDB = inputEmailUser.value;
+  const email = document.querySelector("#email").value;
 
-  fetch('http://localhost:3000/usuarios')
+  // Busca apenas pelo e-mail informado — a API não expõe senhas
+  fetch(`http://localhost:3000/usuarios?email=${encodeURIComponent(email)}`)
     .then((res) => res.json())
-    .then((jsonArray) => {
-      const foundUser = jsonArray.find(user => user.email === emailDB);
-
-      if (foundUser) {
+    .then((usuarios) => {
+      if (usuarios.length > 0) {
         document.querySelector('.search-bar').classList.remove('error', 'highlight');
         document.querySelector('.search-bar').classList.add('highlight');
 
-        // Passa o e-mail diretamente para a próxima página usando parâmetros de consulta na URL
-        window.location.href = `forget-password.html?email=${encodeURIComponent(foundUser.email)}`;
+        // Passa o e-mail para a próxima página via parâmetro de consulta na URL
+        window.location.href = `forget-password.html?email=${encodeURIComponent(email)}`;
       } else {
         document.querySelector('.search-bar').classList.remove('highlight');
         document.querySelector('.search-bar').classList.add('error');
@@ -24,4 +22,3 @@ btnAvançar.addEventListener("click", (e) => {
       }
     });
 });
-

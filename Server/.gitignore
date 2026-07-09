@@ -1,2 +1,16 @@
-node_modules
+# Dependências
+node_modules/
+
+# Segredos e configuração local — nunca commitar
+.env
+
+# Banco de dados local (contém dados de usuários e passageiros)
+*.db
+*.sqlite
+
+# Certificados e chaves privadas
+assets/SSL/
+
+# Sistema operacional
 .DS_Store
+Thumbs.db

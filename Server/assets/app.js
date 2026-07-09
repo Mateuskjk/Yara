@@ -1,54 +1,38 @@
+import 'dotenv/config';
 import express from 'express';
 import fs from 'fs';
 import https from 'https';
 import cors from 'cors';
 import router from './routes.js';
-import { createTable } from './controler/Destinos.js';
-import { createTableUsuarios } from './controler/Usuarios.js';
-import { createTableInformationPassenger } from './controler/informationPassenger.js';
-import { sendMail } from './controler/passagem.js';
-import { createTableHoraViagem } from './controler/HoraViagem.js';
-import { createTableSigla } from './controler/Sigla.js';
-import { createTableCompanhia } from './controler/Companhias.js';
+import { createTableUsuarios } from './controllers/Usuarios.js';
+import { createTableDestinos } from './controllers/Destinos.js';
+import { createTablePassageiros } from './controllers/Passageiros.js';
+import { createTableHoraViagem } from './controllers/HoraViagem.js';
+import { createTableSigla } from './controllers/Sigla.js';
+import { createTableCompanhias } from './controllers/Companhias.js';
 
 const app = express();
-const port = process.env.PORT || 3002;
-
-const server = app.listen(port, () => console.log(`Example app listening on port ${port}!`));
-
-server.keepAliveTimeout = 140 * 1000;
-server.headersTimeout = 140 * 1000;
+const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(cors());
-
-createTable();
 app.use(router);
 
-createTableUsuarios();
-app.use(router);
+// Garante que as tabelas existem antes de aceitar requisições
+await createTableUsuarios();
+await createTableDestinos();
+await createTablePassageiros();
+await createTableHoraViagem();
+await createTableSigla();
+await createTableCompanhias();
 
-createTableInformationPassenger();
-app.use(router)
+app.listen(port, () => console.log(`API rodando em http://localhost:${port}`));
 
-sendMail();
-app.use(router)
-
-createTableHoraViagem();
-app.use(router)
-
-createTableSigla();
-app.use(router)
-
-createTableCompanhia();
-app.use(router)
-
-
-app.listen(3000, () => {
-  console.log('API rodando.')
-});
-
-https.createServer({
-  cert: fs.readFileSync('./assets/SSL/code.crt'),
-  key: fs.readFileSync('./assets/SSL/code.key')
-}, app).listen(3001, () => console.log("Rodando um HTTPS"));
+// HTTPS opcional: defina SSL_KEY_PATH e SSL_CERT_PATH no .env para habilitar
+if (process.env.SSL_KEY_PATH && process.env.SSL_CERT_PATH) {
+  const httpsPort = process.env.HTTPS_PORT || 3001;
+  https.createServer({
+    key: fs.readFileSync(process.env.SSL_KEY_PATH),
+    cert: fs.readFileSync(process.env.SSL_CERT_PATH)
+  }, app).listen(httpsPort, () => console.log(`HTTPS rodando em https://localhost:${httpsPort}`));
+}

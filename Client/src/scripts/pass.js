@@ -56,7 +56,7 @@ const empresa = infotickets.cardID;
 const companhias = document.getElementById('company')
 companhias.textContent = empresa
 
-fetch('http://localhost:3000/getSelectHoraViagens')
+fetch('http://localhost:3000/horarios')
   .then(res => res.json())
   .then(dataArray => {
     // Check if the array is not empty
@@ -73,7 +73,7 @@ fetch('http://localhost:3000/getSelectHoraViagens')
     console.error('Error fetching data:', error);
   });
 
-fetch('http://localhost:3000/getSelectSiglas')
+fetch('http://localhost:3000/siglas')
   .then(res => res.json())
   .then(siglaArray => {
     console.log('Sigla Array:', siglaArray);
@@ -137,7 +137,7 @@ const varCodeElement = document.getElementById('varCode');
 const randomCode = generateRandomCode();
 varCodeElement.textContent = randomCode;
   
-fetch('http://localhost:3000/getselectInformationUser')
+fetch('http://localhost:3000/passageiros')
     .then(response => response.json())
     .then(data => {
         console.log(data);

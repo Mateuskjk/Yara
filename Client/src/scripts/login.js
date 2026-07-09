@@ -1,74 +1,37 @@
-// Captura valores dos inputs
+// Autenticação: envia e-mail e senha para o servidor, que valida com bcrypt.
+// A senha nunca é salva no navegador e a lista de usuários nunca é exposta.
 const btnLogin = document.querySelector("#enviar");
 
 btnLogin.addEventListener("click", function(e){
   e.preventDefault();
 
-  const inputUserName = document.querySelector("#tagName");
-  const inputPassUser = document.querySelector("#pass");
+  const email = document.querySelector("#tagName").value;
+  const senha = document.querySelector("#pass").value;
 
-  const userName = inputUserName.value;
-  const passUser = inputPassUser.value;
-
-// Transforma em um Objeto JS
-  const loginUser = {
-    userName,
-    passUser
-  };
-
-// Transforma em uma string para JSON
-  const arqLogin = JSON.stringify(loginUser)
-	console.log(arqLogin)
-
-// Coloco o meu objeto no localStorage
-  localStorage.setItem('loginUser', arqLogin);
-
-// Faço um GET nos meus usuarios cadastrados
-  fetch('http://localhost:3000/usuarios')
-  .then((res) => res.json())
-  .then((jsonArray) => {
-    const data = localStorage.getItem('loginUser');
-    let foundMatch = false;
-
-// Verifico sem tem os dados salvos no meu localstorage
-    if (data) {
-      // Converto a string recebida no GET para um objeto JS
-      const usersObject = JSON.parse(data);
-
-      // Iterar pelos objetos no array da resposta da solicitação fetch
-      for (const json of jsonArray) {
-        if (usersObject.userName == json.email && usersObject.passUser == json.senha) {
-          foundMatch = true;
-
-          document.querySelector('.search-bar').classList.remove('error');
-          document.querySelector('.search-bar').classList.remove('error');
-          document.querySelector('.search-bar').classList.add('highlight');
-          document.querySelector('.search-bar').classList.add('highlight');
-
-          window.location.href = 'index-with-icon.html'
-          break; 
-        }
+  fetch('http://localhost:3000/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, senha })
+  })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error('Credenciais inválidas');
       }
+      return res.json();
+    })
+    .then((usuario) => {
+      // Guarda apenas os dados públicos do usuário logado (sem senha)
+      localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
 
-      if (!foundMatch) {
-        // Remove a classe 'highlight' (se já existir) e adiciona uma classe para a borda vermelha escura
-        document.querySelector('.search-bar').classList.remove('highlight');
-        document.querySelector('.search-bar').classList.remove('highlight');
-        document.querySelector('.search-bar').classList.add('error');
-        document.querySelector('.search-bar').classList.add('error');
+      document.querySelector('.search-bar').classList.remove('error');
+      document.querySelector('.search-bar').classList.add('highlight');
 
-        //alert("Usuário e senha estão Incorretos.")
-      }
-    } else {
-      // Remove a classe 'highlight' (se já existir) e adiciona uma classe para a borda vermelha escura
-      document.querySelector('.search-bar').classList.remove('highlight');
+      window.location.href = 'index-with-icon.html';
+    })
+    .catch(() => {
       document.querySelector('.search-bar').classList.remove('highlight');
       document.querySelector('.search-bar').classList.add('error');
-      document.querySelector('.search-bar').classList.add('error');
-
-      //alert("Nenhum dado de login encontrado.")
-    }
-  });
+    });
 })
 
 //Mostra e Esconde a senha do usuário ==========================

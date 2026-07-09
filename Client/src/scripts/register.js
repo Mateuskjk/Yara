@@ -3,55 +3,48 @@ const btnAccount = document.querySelector('#send');
 btnAccount.addEventListener('click', function (e) {
   e.preventDefault();
 
-  const inputFirstName = document.querySelector('#nome');
-  const inputLastName = document.querySelector('#s-nome');
-  const inputEmail = document.querySelector('#email');
-  const inputConfEmail = document.querySelector('#c-email');
-  const inputSenha = document.querySelector('#pass');
-  const inputConfSenha = document.querySelector('#Confpass');
+  const nome = document.querySelector('#nome').value;
+  const sobrenome = document.querySelector('#s-nome').value;
+  const email = document.querySelector('#email').value;
+  const confEmail = document.querySelector('#c-email').value;
+  const senha = document.querySelector('#pass').value;
+  const confSenha = document.querySelector('#Confpass').value;
 
-  const nome = inputFirstName.value;
-  const sobrenome = inputLastName.value;
-  const email = inputEmail.value;
-  const confEmail = inputConfEmail.value;
-  const senha = inputSenha.value;
-  const confSenha = inputConfSenha.value;
+  // As confirmações são validadas aqui no cliente e não são enviadas
+  // nem armazenadas — o servidor só recebe os dados necessários.
+  if (email !== confEmail) {
+    alert('Os e-mails informados não coincidem.');
+    return;
+  }
 
-  const registerUser = {
-    nome,
-    sobrenome,
-    email,
-    confEmail,
-    senha,
-    confSenha
-  };
+  if (senha !== confSenha) {
+    alert('As senhas informadas não coincidem.');
+    return;
+  }
 
-  const arqRegister = JSON.stringify(registerUser);
-  localStorage.setItem('registerUser', arqRegister);
-
-  window.location.href = "login.html"
-
-  // Realize a solicitação POST para o servidor Node.js
-  fetch('http://localhost:3000/usuario', {
+  fetch('http://localhost:3000/usuarios', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(registerUser)
+    body: JSON.stringify({ nome, sobrenome, email, senha })
   })
     .then(response => {
+      if (response.status === 409) {
+        throw new Error('E-mail já cadastrado.');
+      }
       if (!response.ok) {
         throw new Error('Erro na solicitação. Status: ' + response.status);
       }
       return response.json();
     })
-    .then(data => {
-      console.log(data);
+    .then(() => {
+      window.location.href = "login.html";
     })
     .catch(error => {
       console.error('Erro:', error);
+      alert(error.message);
     });
-  
 });
 
 function mostrarSenha(){
